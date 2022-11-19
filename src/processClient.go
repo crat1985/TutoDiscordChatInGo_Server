@@ -21,7 +21,7 @@ func ProcessClient(conn net.Conn) {
 	var pseudo string
 	var err error
 	for {
-		valid, pseudo, err = utils.CheckPseudo(conn)
+		valid, pseudo, err = utils.CheckPseudoAndPassword(conn)
 		if err != nil {
 			conn.Close()
 			log.Printf("%s disconnected without logging in !\n", conn.RemoteAddr().String())

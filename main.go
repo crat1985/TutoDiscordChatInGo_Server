@@ -5,6 +5,7 @@ import (
 	"net"
 
 	"github.com/RIC217/TutoDiscordChatInGo_Server/src"
+	"github.com/RIC217/TutoDiscordChatInGo_Server/utils"
 )
 
 func main() {
@@ -14,6 +15,7 @@ func main() {
 		panic(err)
 	}
 	log.Println("Server listening on port 8080...")
+	utils.GetAccounts()
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
