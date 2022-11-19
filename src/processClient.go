@@ -46,11 +46,10 @@ func ProcessClient(conn net.Conn) {
 			break
 		}
 		message = string(slice[:n])
-		if strings.Contains(message, "£") {
-			broadcastToEveryone(tempSocket.pseudo, message)
-		} else {
-			conn.Write([]byte("Un message ne peut pas contenir '£'"))
-		}
+		message = strings.ReplaceAll(message, "\n", "")
+		message = strings.ReplaceAll(message, "\t", "")
+		message = strings.Trim(message, " ")
+		broadcastToEveryone(tempSocket.pseudo, message)
 	}
 	removeElementFromSockets(tempSocket)
 	log.Printf("%s (with IP %s) has disconnected !\n", pseudo, conn.RemoteAddr().String())
@@ -75,8 +74,7 @@ func removeElementFromSockets(e userSocket) {
 
 func broadcastToEveryone(sender, message string) {
 	for _, user := range sockets {
-		user.socket.Write([]byte("£WHO" + sender))
-		user.socket.Write([]byte("£MSG" + message))
+		user.socket.Write([]byte(sender + "\n" + message))
 	}
 	log.Println(sender + ": " + message)
 }
