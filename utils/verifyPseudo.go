@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func CheckPseudoAndPassword(conn net.Conn) (valid bool, infos string, err error) {
+func CheckPseudoAndPassword(conn net.Conn, pseudos *[]string) (valid bool, infos string, err error) {
 	slice := make([]byte, 1024)
 	n, err := conn.Read(slice)
 	if err != nil {
@@ -19,7 +19,12 @@ func CheckPseudoAndPassword(conn net.Conn) (valid bool, infos string, err error)
 	pseudo := strings.Split(pseudoAndPassword, "\n")[0]
 	password := strings.Split(pseudoAndPassword, "\n")[1]
 
-	accounts := GetAccounts()
+	if strings.Contains(","+strings.Join(*pseudos, ",")+",", ","+pseudo+",") {
+		conn.Write([]byte("Déjà connecté !"))
+		return false, "Déjà connecté !", nil
+	}
+
+	accounts := GetAccountsAuto()
 	if accounts[pseudo] == "" {
 		conn.Write([]byte("Pseudo invalide !"))
 		return false, "Pseudo invalide !", nil

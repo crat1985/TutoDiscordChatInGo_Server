@@ -61,6 +61,13 @@ func GetAccounts() map[string]string {
 	return Accounts
 }
 
+func GetAccountsAuto() map[string]string {
+	if len(Accounts) == 0 {
+		return GetAccounts()
+	}
+	return Accounts
+}
+
 func ResetAndGetAccounts() map[string]string {
 	ResetAccounts()
 	return GetAccounts()
