@@ -8,13 +8,15 @@ import (
 	"github.com/RIC217/TutoDiscordChatInGo_Server/utils"
 )
 
+const port = "8888"
+
 func main() {
-	log.Println("Starting server on port 8080...")
-	listener, err := net.Listen("tcp", ":8080")
+	log.Printf("Starting server on port %s...\n", port)
+	listener, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		panic(err)
 	}
-	log.Println("Server listening on port 8080...")
+	log.Printf("Server listening on port %s...\n", port)
 	utils.GetAccounts()
 	for {
 		conn, err := listener.Accept()
