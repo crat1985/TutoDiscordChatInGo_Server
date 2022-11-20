@@ -13,9 +13,13 @@ type userSocket struct {
 	pseudo string
 }
 
+func (u userSocket) isOp() bool {
+	return strings.Contains(","+strings.Join(utils.GetOpsAuto(), ",")+",", u.pseudo)
+}
+
 var sockets []userSocket
 
-func ProcessClient(conn net.Conn) {
+func ProcessClient(conn net.Conn, ops *[]string) {
 	log.Println("New connection from " + conn.RemoteAddr().String())
 	var valid bool
 	var pseudo string
@@ -49,7 +53,7 @@ func ProcessClient(conn net.Conn) {
 		message = strings.ReplaceAll(message, "\n", "")
 		message = strings.ReplaceAll(message, "\t", "")
 		message = strings.Trim(message, " ")
-		broadcastToEveryone(tempSocket.pseudo, message)
+		broadcastToEveryone(tempSocket, message)
 	}
 	removeElementFromSockets(tempSocket)
 	log.Printf("%s (with IP %s) has disconnected !\n", pseudo, conn.RemoteAddr().String())
@@ -72,9 +76,12 @@ func removeElementFromSockets(e userSocket) {
 	sockets = append(sockets[:index], sockets[index+1:]...)
 }
 
-func broadcastToEveryone(sender, message string) {
-	for _, user := range sockets {
-		user.socket.Write([]byte(sender + "\n" + message))
+func broadcastToEveryone(sender userSocket, message string) {
+	if sender.isOp() {
+		sender.pseudo = "[Admin] " + sender.pseudo
 	}
-	log.Println(sender + ": " + message)
+	for _, user := range sockets {
+		user.socket.Write([]byte(sender.pseudo + "\n" + message))
+	}
+	log.Println(sender.pseudo + ": " + message)
 }
