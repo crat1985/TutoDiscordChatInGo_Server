@@ -53,7 +53,6 @@ func ProcessClient(conn net.Conn) {
 	for {
 		n, err := conn.Read(slice)
 		if err != nil {
-			log.Println(err)
 			break
 		}
 		message = string(slice[:n])
