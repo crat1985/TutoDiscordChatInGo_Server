@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Vérifier si le pseudo et le mot de passe sont valides
 func CheckPseudoAndPassword(conn net.Conn, pseudos *[]string) (valid bool, infos string, err error) {
 	slice := make([]byte, 1024)
 	n, err := conn.Read(slice)

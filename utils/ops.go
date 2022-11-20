@@ -8,10 +8,13 @@ import (
 )
 
 var (
+	//Chemin du fichier contenant la liste des administrateurs
 	opsFilePath string = path.Join(".", "config", "ops.json")
-	ops         []string
+	//Liste des administrateurs
+	ops []string
 )
 
+// Retourne les administrateurs, mais en ne lisant le fichier de configuration que si nécessaire
 func GetOpsAuto() []string {
 	if len(ops) == 0 {
 		return GetOps()
@@ -19,6 +22,7 @@ func GetOpsAuto() []string {
 	return ops
 }
 
+// Encode la liste des administrateurs en JSON
 func Encode(ops []string) []byte {
 	content, err := json.MarshalIndent(ops, "", "  ")
 	if err != nil {
@@ -27,6 +31,7 @@ func Encode(ops []string) []byte {
 	return content
 }
 
+// Créer le fichier contenant la liste des administrateurs
 func CreateOpsFile(ops ...string) {
 	f, err := os.Create(opsFilePath)
 	if err != nil {
@@ -36,6 +41,7 @@ func CreateOpsFile(ops ...string) {
 	f.Write(Encode(ops))
 }
 
+// Lire le fichier contenant la liste des administrateurs
 func ReadOpsFile() []byte {
 	_, err := os.Stat(opsFilePath)
 	if err != nil {
@@ -50,6 +56,7 @@ func ReadOpsFile() []byte {
 	return content
 }
 
+// Décoder le fichier de configuration JSON vers une liste de strings
 func Decode() []string {
 	err := json.Unmarshal(ReadOpsFile(), &ops)
 	if err != nil {
@@ -58,6 +65,7 @@ func Decode() []string {
 	return ops
 }
 
+// Retourne les administrateurs en lisant le fichier de configuration
 func GetOps() []string {
 	return Decode()
 }

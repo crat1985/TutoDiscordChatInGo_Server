@@ -10,6 +10,7 @@ import (
 
 const port = "8888"
 
+// Fonction principale
 func main() {
 	log.Printf("Starting server on port %s...\n", port)
 	listener, err := net.Listen("tcp", ":"+port)
@@ -17,7 +18,7 @@ func main() {
 		panic(err)
 	}
 	log.Printf("Server listening on port %s...\n", port)
-	utils.GetAccounts()
+	utils.GetAccountsAuto()
 	utils.GetOpsAuto()
 	for {
 		conn, err := listener.Accept()

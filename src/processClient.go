@@ -8,18 +8,24 @@ import (
 	"github.com/RIC217/TutoDiscordChatInGo_Server/utils"
 )
 
+// Structure contenant le socket et le pseudo d'un utilisateur
 type userSocket struct {
 	socket net.Conn
 	pseudo string
 }
 
+// Renvoie true si l'utilisateur est administrateur, false sinon
 func (u userSocket) isOp() bool {
 	return strings.Contains(","+strings.Join(utils.GetOpsAuto(), ",")+",", u.pseudo)
 }
 
+// Liste des sockets connectés
 var sockets []userSocket
+
+// Liste des pseudos connectés
 var onlinePseudos []string
 
+// Fonction exécutée à chaque fois qu'un client se connecte
 func ProcessClient(conn net.Conn) {
 	log.Println("New connection from " + conn.RemoteAddr().String())
 	var valid bool
@@ -60,11 +66,13 @@ func ProcessClient(conn net.Conn) {
 	log.Printf("%s (with IP %s) has disconnected !\n", pseudo, conn.RemoteAddr().String())
 }
 
+// Ajoute un élément à la liste des sockets et à la liste des pseudos connectés
 func addElementToSockets(e userSocket) {
 	sockets = append(sockets, e)
 	onlinePseudos = append(onlinePseudos, e.pseudo)
 }
 
+// Supprime un élément à la liste des sockets et à la liste des pseudos connectés
 func removeElementFromSockets(e userSocket) {
 	var index int = -1
 	for key, value := range sockets {
@@ -86,6 +94,7 @@ func removeElementFromSockets(e userSocket) {
 	}
 }
 
+// Envoyer un message à tous les sockets connectés et l'affiche dans la console
 func broadcastToEveryone(sender userSocket, message string) {
 	if sender.isOp() {
 		sender.pseudo = "[Admin] " + sender.pseudo
