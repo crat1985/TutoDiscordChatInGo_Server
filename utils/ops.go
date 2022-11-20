@@ -23,7 +23,7 @@ func GetOpsAuto() []string {
 }
 
 // Encode la liste des administrateurs en JSON
-func Encode(ops []string) []byte {
+func Encode(ops... string) []byte {
 	content, err := json.MarshalIndent(ops, "", "  ")
 	if err != nil {
 		panic(err)
@@ -38,7 +38,7 @@ func CreateOpsFile(ops ...string) {
 		panic(err)
 	}
 	defer f.Close()
-	f.Write(Encode(ops))
+	f.Write(Encode(ops...))
 }
 
 // Lire le fichier contenant la liste des administrateurs

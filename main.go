@@ -8,11 +8,12 @@ import (
 )
 
 const port = "8888"
+const network = "tcp"
 
 // Fonction principale
 func main() {
 	log.Printf("Starting server on port %s...\n", port)
-	listener, err := net.Listen("tcp", ":"+port)
+	listener, err := net.Listen(network, ":"+port)
 	if err != nil {
 		panic(err)
 	}

@@ -7,10 +7,8 @@ import (
 	"path"
 )
 
-var (
-	//Liste des comptes
-	Accounts map[string]string = make(map[string]string)
-)
+// Liste des comptes
+var Accounts map[string]string = make(map[string]string)
 
 // Rétablir la configuration d'usine des comptes
 func ResetAccounts() {

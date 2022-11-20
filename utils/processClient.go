@@ -34,49 +34,9 @@ func ProcessClient(conn net.Conn) {
 	log.Printf("Pseudo for %s is now %s !\n", conn.RemoteAddr().String(), pseudo)
 	tempSocket := userSocket{pseudo: pseudo, socket: conn}
 	addElementToSockets(tempSocket)
-	slice := make([]byte, 1024)
-	var message string
-	for {
-		n, err := conn.Read(slice)
-		if err != nil {
-			break
-		}
-		message = string(slice[:n])
-		message = strings.ReplaceAll(message, "\n", "")
-		message = strings.ReplaceAll(message, "\t", "")
-		message = strings.Trim(message, " ")
-		broadcastToEveryone(tempSocket, message)
-	}
+	listenForMessages(conn, tempSocket)
 	removeElementFromSockets(tempSocket)
 	log.Printf("%s (with IP %s) has disconnected !\n", pseudo, conn.RemoteAddr().String())
-}
-
-// Ajoute un élément à la liste des sockets et à la liste des pseudos connectés
-func addElementToSockets(e userSocket) {
-	sockets = append(sockets, e)
-	onlinePseudos = append(onlinePseudos, e.pseudo)
-}
-
-// Supprime un élément à la liste des sockets et à la liste des pseudos connectés
-func removeElementFromSockets(e userSocket) {
-	var index int = -1
-	for key, value := range sockets {
-		if value == e {
-			index = key
-		}
-	}
-	if index != -1 {
-		sockets = append(sockets[:index], sockets[index+1:]...)
-	}
-	index = -1
-	for key, value := range onlinePseudos {
-		if value == e.pseudo {
-			index = key
-		}
-	}
-	if index != -1 {
-		onlinePseudos = append(onlinePseudos[:index], onlinePseudos[index+1:]...)
-	}
 }
 
 // Envoyer un message à tous les sockets connectés et l'affiche dans la console
