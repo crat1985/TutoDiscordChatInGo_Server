@@ -6,7 +6,7 @@ import (
 )
 
 // Vérifier si le pseudo et le mot de passe sont valides
-func CheckPseudoAndPassword(conn net.Conn, pseudos *[]string) (valid bool, infos string, err error) {
+func CheckPseudoAndPassword(conn net.Conn) (valid bool, infos string, err error) {
 	slice := make([]byte, 1024)
 	n, err := conn.Read(slice)
 	if err != nil {
@@ -20,7 +20,7 @@ func CheckPseudoAndPassword(conn net.Conn, pseudos *[]string) (valid bool, infos
 	pseudo := strings.Split(pseudoAndPassword, "\n")[0]
 	password := strings.Split(pseudoAndPassword, "\n")[1]
 
-	if strings.Contains(","+strings.Join(*pseudos, ",")+",", ","+pseudo+",") {
+	if strings.Contains(","+strings.Join(onlinePseudos, ",")+",", ","+pseudo+",") {
 		conn.Write([]byte("Déjà connecté !"))
 		return false, "Déjà connecté !", nil
 	}

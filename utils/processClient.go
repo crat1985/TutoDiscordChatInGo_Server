@@ -1,11 +1,9 @@
-package src
+package utils
 
 import (
 	"log"
 	"net"
 	"strings"
-
-	"github.com/RIC217/TutoDiscordChatInGo_Server/utils"
 )
 
 // Structure contenant le socket et le pseudo d'un utilisateur
@@ -16,7 +14,7 @@ type userSocket struct {
 
 // Renvoie true si l'utilisateur est administrateur, false sinon
 func (u userSocket) isOp() bool {
-	return strings.Contains(","+strings.Join(utils.GetOpsAuto(), ",")+",", u.pseudo)
+	return strings.Contains(","+strings.Join(GetOpsAuto(), ",")+",", u.pseudo)
 }
 
 // Liste des sockets connectés
@@ -32,7 +30,7 @@ func ProcessClient(conn net.Conn) {
 	var pseudo string
 	var err error
 	for {
-		valid, pseudo, err = utils.CheckPseudoAndPassword(conn, &onlinePseudos)
+		valid, pseudo, err = CheckPseudoAndPassword(conn)
 		if err != nil {
 			conn.Close()
 			log.Printf("%s disconnected without logging in !\n", conn.RemoteAddr().String())
