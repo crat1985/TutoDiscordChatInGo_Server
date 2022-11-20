@@ -26,21 +26,9 @@ var onlinePseudos []string
 // Fonction exécutée à chaque fois qu'un client se connecte
 func ProcessClient(conn net.Conn) {
 	log.Println("New connection from " + conn.RemoteAddr().String())
-	var valid bool
-	var pseudo string
-	var err error
-	for {
-		valid, pseudo, err = CheckPseudoAndPassword(conn)
-		if err != nil {
-			conn.Close()
-			log.Printf("%s disconnected without logging in !\n", conn.RemoteAddr().String())
-			return
-		}
-		if !valid {
-			log.Println("Invalid pseudo : " + pseudo)
-		} else {
-			break
-		}
+	pseudo, err := CheckPseudoAndPassword(conn)
+	if err != nil {
+		return
 	}
 	conn.Write([]byte("pseudook"))
 	log.Printf("Pseudo for %s is now %s !\n", conn.RemoteAddr().String(), pseudo)
