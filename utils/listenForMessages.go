@@ -18,6 +18,8 @@ func listenForMessages(conn net.Conn, tempSocket userSocket) {
 		message = strings.ReplaceAll(message, "\n", "")
 		message = strings.ReplaceAll(message, "\t", "")
 		message = strings.Trim(message, " ")
-		broadcastToEveryone(tempSocket, message)
+		if !isCommand(message, tempSocket) {
+			broadcastToEveryone(tempSocket, message)
+		}
 	}
 }

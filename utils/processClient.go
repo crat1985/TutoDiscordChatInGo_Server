@@ -14,7 +14,8 @@ type userSocket struct {
 
 // Renvoie true si l'utilisateur est administrateur, false sinon
 func (u userSocket) isOp() bool {
-	return strings.Contains(","+strings.Join(GetOpsAuto(), ",")+",", u.pseudo)
+	completeListString := "," + strings.Join(GetOpsAuto(), ",") + ","
+	return strings.Contains(completeListString, ","+u.pseudo+",")
 }
 
 // Liste des sockets connectés
@@ -45,7 +46,11 @@ func broadcastToEveryone(sender userSocket, message string) {
 		sender.pseudo = "[Admin] " + sender.pseudo
 	}
 	for _, user := range sockets {
-		user.socket.Write([]byte(sender.pseudo + "\n" + message))
+		writeToClient(sender.pseudo, message, user.socket)
 	}
 	log.Println(sender.pseudo + ": " + message)
+}
+
+func writeToClient(pseudo, message string, socket net.Conn) {
+	socket.Write([]byte(pseudo + "\n" + message))
 }

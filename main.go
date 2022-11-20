@@ -20,6 +20,7 @@ func main() {
 	log.Printf("Server listening on port %s...\n", port)
 	utils.GetAccountsAuto()
 	utils.GetOpsAuto()
+	utils.SetCommands()
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
