@@ -62,7 +62,7 @@ func GetAllCommands() string {
 			x++
 			continue
 		}
-		commandDescList += "\n"+k + " - " + command.Description
+		commandDescList += "\n" + k + " - " + command.Description
 	}
 	log.Println(commandDescList)
 	return commandDescList
@@ -75,7 +75,8 @@ func isCommand(msg string, usersocket userSocket) bool {
 		return false
 	}
 	if commands[msg[1:]].Action == nil {
-		writeToClientAsServer("Commande introuvable !\n", usersocket.socket)
+		// issues with that
+		// writeToClientAsServer("Commande introuvable !\n", usersocket.socket)
 		return false
 	}
 	commands[msg[1:]].Action(usersocket)
