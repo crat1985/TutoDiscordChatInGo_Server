@@ -33,11 +33,13 @@ func ProcessClient(conn net.Conn) {
 	}
 	conn.Write([]byte("pseudook"))
 	log.Printf("Pseudo for %s is now %s !\n", conn.RemoteAddr().String(), pseudo)
+	broadcastAsServer(pseudo + "vient de se connecter au chat !")
 	tempSocket := userSocket{pseudo: pseudo, socket: conn}
 	addElementToSockets(tempSocket)
 	listenForMessages(conn, tempSocket)
 	removeElementFromSockets(tempSocket)
 	log.Printf("%s (with IP %s) has disconnected !\n", pseudo, conn.RemoteAddr().String())
+	broadcastAsServer(pseudo + "vient de se déconnecté du chat !")
 }
 
 // Envoyer un message à tous les sockets connectés et l'affiche dans la console
@@ -51,6 +53,20 @@ func broadcastToEveryone(sender userSocket, message string) {
 	log.Println(sender.pseudo + ": " + message)
 }
 
-func writeToClient(pseudo, message string, socket net.Conn) {
-	socket.Write([]byte(pseudo + "\n" + message))
+// Envoyer des données à un client en tant que serveur
+func writeToClientAsServer(message string, socket net.Conn) {
+	writeToClient("serv", message, socket)
+}
+
+// Envoyer des données à un client
+func writeToClient(sender, message string, socket net.Conn) {
+	socket.Write([]byte(sender + "\n" + message))
+}
+
+// Envoyer des données à tous les clients en tant que serveur
+func broadcastAsServer(message string) {
+	for _, user := range sockets {
+		writeToClientAsServer(message, user.socket)
+	}
+	log.Println("[LOG] " + message)
 }
