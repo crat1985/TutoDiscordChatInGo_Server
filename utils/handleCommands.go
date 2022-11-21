@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"strings"
 )
 
@@ -46,8 +47,9 @@ func GetCommandsNotOp() string {
 			x++
 			continue
 		}
-		commandDescList += k + " - " + command.Description
+		commandDescList += "\n" + k + " - " + command.Description
 	}
+	log.Println(commandDescList)
 	return commandDescList
 }
 
@@ -60,8 +62,9 @@ func GetAllCommands() string {
 			x++
 			continue
 		}
-		commandDescList += k + " - " + command.Description
+		commandDescList += "\n"+k + " - " + command.Description
 	}
+	log.Println(commandDescList)
 	return commandDescList
 }
 

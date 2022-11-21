@@ -33,13 +33,13 @@ func ProcessClient(conn net.Conn) {
 	}
 	conn.Write([]byte("pseudook"))
 	log.Printf("Pseudo for %s is now %s !\n", conn.RemoteAddr().String(), pseudo)
-	broadcastAsServer(pseudo + "vient de se connecter au chat !")
+	broadcastAsServer(pseudo + " vient de se connecter au chat !")
 	tempSocket := userSocket{pseudo: pseudo, socket: conn}
 	addElementToSockets(tempSocket)
 	listenForMessages(conn, tempSocket)
 	removeElementFromSockets(tempSocket)
 	log.Printf("%s (with IP %s) has disconnected !\n", pseudo, conn.RemoteAddr().String())
-	broadcastAsServer(pseudo + "vient de se déconnecté du chat !")
+	broadcastAsServer(pseudo + " vient de se déconnecté du chat !")
 }
 
 // Envoyer un message à tous les sockets connectés et l'affiche dans la console
